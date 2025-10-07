@@ -1,0 +1,53 @@
+# Dependencias de Node.js
+node_modules/
+package-lock.json
+
+# Archivos de resultados y logs
+test-results.json
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de sistema macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Archivos de sistema Windows
+Desktop.ini
+$RECYCLE.BIN/
+
+# Archivos de sistema Linux
+*~
+.directory
+
+# Archivos temporales de editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos de caché
+.npm
+.cache/
+*.tmp
+*.temp
+
+# Archivos de entorno y configuración local
+.env
+.env.local
+.env.*.local
+
+# Archivos de coverage y testing
+coverage/
+.nyc_output/
+
+# Archivos específicos del proyecto educativo
+# (mantener archivos de ejemplo y templates)
+!assets/images/.gitkeep

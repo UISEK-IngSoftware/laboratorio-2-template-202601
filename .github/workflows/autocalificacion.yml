@@ -1,0 +1,94 @@
+name: 🤖 Autocalificación Laboratorio 2
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  autocalificacion:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout código
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: 📦 Instalar dependencias
+      run: |
+        if [ -f package.json ]; then
+          npm ci --no-audit
+        else
+          echo "⚠️ No se encontró package.json, creando configuración básica..."
+          npm init -y
+          npm install jsdom puppeteer --no-audit
+        fi
+        
+    - name: 🔍 Verificar estructura de archivos
+      run: |
+        echo "📁 Verificando estructura del proyecto..."
+        ls -la
+        echo "📂 Verificando carpeta assets..."
+        if [ -d "assets" ]; then
+          ls -la assets/
+          if [ -d "assets/css" ]; then
+            echo "✅ Carpeta CSS encontrada"
+            ls -la assets/css/
+          else
+            echo "❌ Carpeta CSS no encontrada"
+          fi
+          if [ -d "assets/js" ]; then
+            echo "✅ Carpeta JS encontrada"
+            ls -la assets/js/
+          else
+            echo "❌ Carpeta JS no encontrada"
+          fi
+          if [ -d "assets/images" ]; then
+            echo "✅ Carpeta images encontrada"
+            ls -la assets/images/
+          else
+            echo "⚠️ Carpeta images no encontrada (opcional)"
+          fi
+        else
+          echo "❌ Carpeta assets no encontrada"
+          exit 1
+        fi
+        
+    - name: 🧪 Ejecutar pruebas HTML
+      run: node tests/html-tests.js
+      
+    - name: 🔗 Ejecutar pruebas de enlaces
+      run: node tests/assets-tests.js
+      
+    - name: 📝 Ejecutar pruebas de contenido
+      run: node tests/content-tests.js
+      
+    - name: ⚡ Ejecutar pruebas de JavaScript
+      run: node tests/javascript-tests.js
+      
+    - name: 📊 Generar reporte final
+      run: node tests/run-tests.js
+      
+    - name: 📋 Mostrar resumen de calificación
+      run: |
+        echo "🎯 === RESUMEN DE CALIFICACIÓN ==="
+        if [ -f test-results.json ]; then
+          cat test-results.json
+        else
+          echo "❌ No se pudo generar el archivo de resultados"
+        fi
+        echo "================================="
+        
+    - name: 📄 Subir reporte como artefacto
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: test-results.json
+        retention-days: 30
