@@ -18,16 +18,15 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-        cache: 'npm'
         
     - name: 📦 Instalar dependencias
       run: |
         if [ -f package.json ]; then
-          npm ci --no-audit
+          npm install --no-audit
         else
           echo "⚠️ No se encontró package.json, creando configuración básica..."
           npm init -y
-          npm install jsdom puppeteer --no-audit
+          npm install jsdom --no-audit
         fi
         
     - name: 🔍 Verificar estructura de archivos
